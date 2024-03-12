@@ -46,7 +46,7 @@ export class WalletsController {
     return this.walletsService.remove(+id);
   }
 
-  @Patch(':id/add-price')
+  @Post(':id/add-price/:amount')
   async addPrice(@Param('id') walletId: string, @Param('amount') amount:number) {
     try {
       const updatedWallet = await this.walletsService.addPrice(walletId, amount);

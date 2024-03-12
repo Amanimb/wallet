@@ -99,7 +99,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], WalletsController.prototype, "remove", null);
 __decorate([
-    (0, common_1.Patch)(':id/add-price'),
+    (0, common_1.Post)(':id/add-price/:amount'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Param)('amount')),
     __metadata("design:type", Function),
