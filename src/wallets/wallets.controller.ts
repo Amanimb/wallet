@@ -5,6 +5,8 @@ import { UpdateWalletDto } from './dto/update-wallet.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { request } from 'http';
+import { TransferMoneyDto } from './dto/transfer-money.dto';
+import { Wallet } from './entities/wallet.entity';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
@@ -58,4 +60,19 @@ export class WalletsController {
       return { error: 'Failed to update price.' };
     }
   }
+
+
+  @Patch('transfer-money/:id')
+  async transferMoney(@Param('id') walletId: string, @Body() transferMoneyDto: TransferMoneyDto) {
+    const transferResult = await this.walletsService.transferMoney(walletId, transferMoneyDto)
+    return {message: 'Price transfered successfully', ...transferResult}
+  } catch (error) {
+    if (error instanceof NotFoundException) {
+      return { error: error.message };
+    }
+    return { error: 'Failed to transfer price.' };
+  }
 }
+
+   
+

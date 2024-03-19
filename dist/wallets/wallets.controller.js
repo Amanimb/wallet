@@ -19,6 +19,7 @@ const create_wallet_dto_1 = require("./dto/create-wallet.dto");
 const update_wallet_dto_1 = require("./dto/update-wallet.dto");
 const passport_1 = require("@nestjs/passport");
 const swagger_1 = require("@nestjs/swagger");
+const transfer_money_dto_1 = require("./dto/transfer-money.dto");
 let WalletsController = class WalletsController {
     constructor(walletsService) {
         this.walletsService = walletsService;
@@ -52,6 +53,16 @@ let WalletsController = class WalletsController {
             }
             return { error: 'Failed to update price.' };
         }
+    }
+    async transferMoney(walletId, transferMoneyDto) {
+        const transferResult = await this.walletsService.transferMoney(walletId, transferMoneyDto);
+        return Object.assign({ message: 'Price transfered successfully' }, transferResult);
+    }
+    catch(error) {
+        if (error instanceof common_1.NotFoundException) {
+            return { error: error.message };
+        }
+        return { error: 'Failed to transfer price.' };
     }
 };
 exports.WalletsController = WalletsController;
@@ -106,6 +117,14 @@ __decorate([
     __metadata("design:paramtypes", [String, Number]),
     __metadata("design:returntype", Promise)
 ], WalletsController.prototype, "addPrice", null);
+__decorate([
+    (0, common_1.Patch)('transfer-money/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, transfer_money_dto_1.TransferMoneyDto]),
+    __metadata("design:returntype", Promise)
+], WalletsController.prototype, "transferMoney", null);
 exports.WalletsController = WalletsController = __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),

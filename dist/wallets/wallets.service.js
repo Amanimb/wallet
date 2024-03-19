@@ -17,9 +17,11 @@ const common_1 = require("@nestjs/common");
 const wallet_entity_1 = require("./entities/wallet.entity");
 const typeorm_1 = require("typeorm");
 const typeorm_2 = require("@nestjs/typeorm");
+const transfer_entity_1 = require("../transfer/entities/transfer.entity");
 let WalletsService = class WalletsService {
-    constructor(walletRepository) {
+    constructor(walletRepository, transferRepository) {
         this.walletRepository = walletRepository;
+        this.transferRepository = transferRepository;
     }
     create(createWalletDto, userId) {
         const wallet = new wallet_entity_1.Wallet();
@@ -62,11 +64,38 @@ let WalletsService = class WalletsService {
             throw new Error(`Failed to add currency to wallet with ID ${walletId}.`);
         }
     }
+    async transferMoney(WalletId, TransferMoneyDto) {
+        const firstUserWallet = await this.walletRepository.findOne({
+            where: { id: WalletId }, relations: {
+                currency: true
+            }
+        });
+        if (!firstUserWallet) {
+            throw new common_1.NotFoundException("can not found wallet");
+        }
+        const secondUserWallet = await this.walletRepository.findOne({ where: { currency: { code: firstUserWallet.currency.code }, user: { id: TransferMoneyDto.secondUserId } } });
+        if (!secondUserWallet) {
+            throw new common_1.NotFoundException("can not transfer money");
+        }
+        firstUserWallet.price -= TransferMoneyDto.amount;
+        secondUserWallet.price += TransferMoneyDto.amount;
+        const transfer = new transfer_entity_1.Transfer();
+        transfer.amount = TransferMoneyDto.amount;
+        transfer.senderWallet = firstUserWallet;
+        transfer.receiverWallet = secondUserWallet;
+        await this.walletRepository.save([firstUserWallet, secondUserWallet]);
+        const savedTransfer = await this.transferRepository.save(transfer);
+        return { senderWallet: firstUserWallet,
+            receiverWallet: secondUserWallet,
+            transfer: savedTransfer };
+    }
 };
 exports.WalletsService = WalletsService;
 exports.WalletsService = WalletsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_2.InjectRepository)(wallet_entity_1.Wallet)),
-    __metadata("design:paramtypes", [typeorm_1.Repository])
+    __param(1, (0, typeorm_2.InjectRepository)(transfer_entity_1.Transfer)),
+    __metadata("design:paramtypes", [typeorm_1.Repository,
+        typeorm_1.Repository])
 ], WalletsService);
 //# sourceMappingURL=wallets.service.js.map

@@ -29,6 +29,7 @@ import { SessionModule } from './session/session.module';
 import { MailerModule } from './mailer/mailer.module';
 import { WalletsModule } from './wallets/wallets.module';
 import { CurrenciesModule } from './currencies/currencies.module';
+import { TransferModule } from './transfer/transfer.module';
 
 @Module({
   imports: [
@@ -89,6 +90,7 @@ import { CurrenciesModule } from './currencies/currencies.module';
     HomeModule,
     WalletsModule,
     CurrenciesModule,
+    TransferModule,
   ],
 })
 export class AppModule {}

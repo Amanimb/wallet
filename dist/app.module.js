@@ -40,6 +40,7 @@ const session_module_1 = require("./session/session.module");
 const mailer_module_1 = require("./mailer/mailer.module");
 const wallets_module_1 = require("./wallets/wallets.module");
 const currencies_module_1 = require("./currencies/currencies.module");
+const transfer_module_1 = require("./transfer/transfer.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -103,6 +104,7 @@ exports.AppModule = AppModule = __decorate([
             home_module_1.HomeModule,
             wallets_module_1.WalletsModule,
             currencies_module_1.CurrenciesModule,
+            transfer_module_1.TransferModule,
         ],
     })
 ], AppModule);

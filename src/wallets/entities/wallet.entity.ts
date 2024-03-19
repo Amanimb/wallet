@@ -1,7 +1,7 @@
 import { ApiResponseProperty } from "@nestjs/swagger";
 import { Currency } from "src/currencies/entities/currency.entity";
 import { User } from "src/users/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Wallet {
@@ -21,8 +21,6 @@ user: User | string
 
 @ManyToOne(() => Currency, (currency) => currency.wallets)
 currency: Currency | string
-
-
 
 
 }
